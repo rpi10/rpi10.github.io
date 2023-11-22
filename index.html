@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Encode/Decode Tool</title>
+  <style>
+    body {
+      background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20220428/pngtree-data-security-abstract-light-effect-background-encryption-locked-image_1077345.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Additional styles for inputs, buttons, and other elements go here */
+  </style>
+  <script>
+    function encodeDecodeText() {
+      var inputText = document.getElementById("inputText").value;
+      var cipherType = document.getElementById("cipherType").value;
+      var operationType = document.getElementById("operationType").value;
+      var outputText = "";
+
+      if (cipherType === "caesar") {
+        var shiftValue = parseInt(document.getElementById("caesarShift").value);
+        if (operationType === "encode") {
+          outputText = caesarCipherEncode(inputText, shiftValue);
+        } else if (operationType === "decode") {
+          outputText = caesarCipherDecode(inputText, shiftValue);
+        }
+      } else if (cipherType === "affine") {
+        var aValue = parseInt(document.getElementById("affineA").value);
+        var bValue = parseInt(document.getElementById("affineB").value);
+        if (operationType === "encode") {
+          outputText = affineCipherEncode(inputText, aValue, bValue);
+        } else if (operationType === "decode") {
+          outputText = affineCipherDecode(inputText, aValue, bValue);
+        }
+      }
+
+      document.getElementById("outputText").value = outputText;
+    }
+
+    function caesarCipherEncode(text, shift) {
+      var result = "";
+      for (var i = 0; i < text.length; i++) {
+        var charCode = text.charCodeAt(i);
+        if (charCode >= 65 && charCode <= 90) {
+          result += String.fromCharCode(((charCode - 65 + shift) % 26) + 65);
+        } else if (charCode >= 97 && charCode <= 122) {
+          result += String.fromCharCode(((charCode - 97 + shift) % 26) + 97);
+        } else {
+          result += text.charAt(i);
+        }
+      }
+      return result;
+    }
+
+    function caesarCipherDecode(text, shift) {
+      var result = "";
+      for (var i = 0; i < text.length; i++) {
+        var charCode = text.charCodeAt(i);
+        if (charCode >= 65 && charCode <= 90) {
+          result += String.fromCharCode(((charCode - 65 - shift + 26) % 26) + 65);
+        } else if (charCode >= 97 && charCode <= 122) {
+          result += String.fromCharCode(((charCode - 97 - shift + 26) % 26) + 97);
+        } else {
+          result += text.charAt(i);
+        }
+      }
+      return result;
+    }
+
+    function affineCipherEncode(text, a, b) {
+      var mod = 26;
+      var result = "";
+
+      for (var i = 0; i < text.length; i++) {
+        var charCode = text.charCodeAt(i);
+        if (charCode >= 65 && charCode <= 90) {
+          result += String.fromCharCode(((a * (charCode - 65) + b) % mod) + 65);
+        } else if (charCode >= 97 && charCode <= 122) {
+          result += String.fromCharCode(((a * (charCode - 97) + b) % mod) + 97);
+        } else {
+          result += text.charAt(i);
+        }
+      }
+      return result;
+    }
+
+    function affineCipherDecode(text, a, b) {
+      var mod = 26;
+      var result = "";
+      var inverseA = 0;
+
+      for (var i = 0; i < mod; i++) {
+        if ((a * i) % mod === 1) {
+          inverseA = i;
+          break;
+        }
+      }
+
+      for (var i = 0; i < text.length; i++) {
+        var charCode = text.charCodeAt(i);
+        if (charCode >= 65 && charCode <= 90) {
+          result += String.fromCharCode(((inverseA * (charCode - 65 - b + mod)) % mod) + 65);
+        } else if (charCode >= 97 && charCode <= 122) {
+          result += String.fromCharCode(((inverseA * (charCode - 97 - b + mod)) % mod) + 97);
+        } else {
+          result += text.charAt(i);
+        }
+      }
+      return result;
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Encode/Decode Tool</h1>
+
+    <label for="inputText">Enter Text:</label><br>
+    <textarea id="inputText" rows="4" cols="50"></textarea><br><br>
+
+    <label for="cipherType">Select Cipher Type:</label>
+    <select id="cipherType">
+      <option value="caesar">Caesar Cipher</option>
+      <option value="affine">Affine Cipher</option>
+    </select><br><br>
+
+    <label for="operationType">Select Operation:</label>
+    <select id="operationType">
+      <option value="encode">Encode</option>
+      <option value="decode">Decode</option>
+    </select><br><br>
+
+    <div id="caesarKey" style="display: none;">
+      <label for="caesarShift">Caesar Shift Key (0-25):</label>
+      <input type="number" id="caesarShift" min="0" max="25" value="3">
+    </div>
+
+    <div id="affineKey" style="display: none;">
+      <label for="affineA">Affine Key 'a' (1-25):</label>
+      <input type="number" id="affineA" min="1" max="25" value="7"><br>
+      <label for="affineB">Affine Key 'b' (0-25):</label>
+      <input type="number" id="affineB" min="0" max="25" value="5">
+    </div><br>
+
+    <button onclick="encodeDecodeText()">Submit</button><br><br>
+
+    <label for="outputText">Result:</label><br>
+    <textarea id="outputText" rows="4" cols="50" readonly></textarea><br>
+  </div>
+
+  <script>
+    document.getElementById("cipherType").addEventListener("change", function() {
+      var caesarKey = document.getElementById("caesarKey");
+      var affineKey = document.getElementById("affineKey");
+
+      if (this.value === "caesar") {
+        caesarKey.style.display = "block";
+        affineKey.style.display = "none";
+      } else if (this.value === "affine") {
+        caesarKey.style.display = "none";
+        affineKey.style.display = "block";
+      }
+    });
+  </script>
+
+</body>
+</html>
