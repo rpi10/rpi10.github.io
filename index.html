@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Weather App Project JavaScript | CodingNepal</title>
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="script.js" defer></script>
+      </head>
+      <body>
+        <h1>A Smarter Weather Forecast</h1>
+        <div class="container">
+          <div class="weather-input">
+            <h3>Enter a City Name</h3>
+            <input class="city-input" type="text" placeholder="E.g., New York, London, Tokyo">
+            <button class="search-btn">Search</button>
+            <div class="separator"></div>
+            <button class="location-btn">Use Current Location</button>
+          </div>
+          <div class="weather-data">
+            <div class="current-weather">
+              <div class="details">
+                <h2>_______ ( ______ )</h2>
+                <h6>Temperature: __�C</h6>
+                <h6>Wind: __ M/S</h6>
+                <h6>Humidity: __%</h6>
+              </div>
+            </div>
+            <div class="days-forecast">
+              <h2>5-Day Forecast</h2>
+              <ul class="weather-cards">
+                <li class="card">
+                  <h3>( ______ )</h3>
+                  <h6>Temp: __C</h6>
+                  <h6>Wind: __ M/S</h6>
+                  <h6>Humidity: __%</h6>
+                </li>
+                <li class="card">
+                  <h3>( ______ )</h3>
+                  <h6>Temp: __C</h6>
+                  <h6>Wind: __ M/S</h6>
+                  <h6>Humidity: __%</h6>
+                </li>
+                <li class="card">
+                  <h3>( ______ )</h3>
+                  <h6>Temp: __C</h6>
+                  <h6>Wind: __ M/S</h6>
+                  <h6>Humidity: __%</h6>
+                </li>
+                <li class="card">
+                  <h3>( ______ )</h3>
+                  <h6>Temp: __C</h6>
+                  <h6>Wind: __ M/S</h6>
+                  <h6>Humidity: __%</h6>
+                </li>
+                <li class="card">
+                  <h3>( ______ )</h3>
+                  <h6>Temp: __C</h6>
+                  <h6>Wind: __ M/S</h6>
+                  <h6>Humidity: __%</h6>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+     
+      </body>
+      <head>
+        <meta charset="utf-8">
+        <title>Maths Question of the Day</title>
+    </head>
+    <body2>
+        <h1>Maths Question of the Day</h1>
+       
+        <h5><span id="equation"></span></p>
+        <form id="answer-form">
+            <label for="answer"></label>
+            <input type="text" id="answer" name="answer" value="x = " class="answer">
+            <input type="hidden" id="correct_answer">
+            <button class="btn">Check Answer</button>
+        </form>
+        <p id="result" class="result"></p>
+        <script>
+            let correctAnswer;
+            let attempts = 0;
+    
+            // Load questions from the JSON file
+            fetch("questions.json")
+                .then(response => response.json())
+                .then(questions_data => {
+                    // Select a random question
+                    const random_question = questions_data[Math.floor(Math.random() * questions_data.length)];
+                    
+                    document.getElementById("equation").textContent = random_question.Equation;
+                    correctAnswer = random_question.Answer.toString();
+                    document.getElementById("correct_answer").value = correctAnswer;
+                })
+                .catch(error => {
+                    console.error("Error loading questions:", error);
+                });
+    
+            const form = document.getElementById('answer-form');
+    
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const userAnswer = document.getElementById('answer').value;
+                attempts++;
+    
+                if (userAnswer === correctAnswer) {
+                    document.getElementById('result').textContent = `Correct! You got it in ${attempts} attempts.`;
+                } else {
+                    document.getElementById('result').textContent = 'Incorrect. Try again!';
+                }
+            });
+        </script>
+    </body2>
+</html>
