@@ -109,11 +109,92 @@ document.addEventListener("DOMContentLoaded", function() {
     const equationContainer = document.getElementById('equation');
     const correctAnswerInput = document.getElementById('correct_answer');
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const messageForm = document.getElementById('answer-form');
-    const messageInput = document.getElementById('answer');
-    const resultContainer = document.getElementById('result');
-    const equationContainer = document.getElementById('equation');
-    const correctAnswerInput = document.getElementById('correct_answer');
+    // Fetch questions from the JSON file
+    fetch("questions.json")
+        .then(response => response.json())
+        .then(questionsData => {
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+            const todaysQuestion = questionsData.find(question => question.date === today);
 
+            if (todaysQuestion) {
+                equationContainer.textContent = todaysQuestion.Equation;
+                correctAnswerInput.value = todaysQuestion.Answer;
+            } else {
+                equationContainer.textContent = "No question for today!";
+            }
+        })
+        .catch(error => {
+            console.error("Error loading questions:", error);
+        });
 
+    messageForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const userAnswer = messageInput.value.trim();
+        const correctAnswer = correctAnswerInput.value.trim();
+
+        if (userAnswer === correctAnswer) {
+            resultContainer.textContent = "Correct!";
+        } else {
+            resultContainer.textContent = "Incorrect. Try again!";
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    let attempts = 0;
+
+    const showPopupBtn = document.getElementById('showPopupBtn');
+    const popup = document.getElementById('popup');
+    const closePopup = document.getElementById('closePopup');
+    const attemptsText = document.getElementById('attemptsText');
+    const shareBtn = document.getElementById('shareBtn');
+
+    showPopupBtn.addEventListener('click', () => {
+        attemptsText.textContent = `Attempts: ${attempts}`;
+        popup.style.display = 'block';
+    });
+
+    closePopup.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == popup) {
+            popup.style.display = 'none';
+        }
+    });
+
+    shareBtn.addEventListener('click', () => {
+        const message = `I have attempted ${attempts} times!`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+
+    async function fetchQuestion() {
+        const response = await fetch('questions.json');
+        const questions = await response.json();
+        const today = new Date().toISOString().split('T')[0];
+        const question = questions.find(q => q.date === today);
+
+        if (question) {
+            document.getElementById('equation').innerText = question.Equation;
+            document.getElementById('correct_answer').value = question.Answer;
+        } else {
+            document.getElementById('equation').innerText = 'No question for today!';
+        }
+    }
+
+    fetchQuestion();
+
+    window.checkAnswer = function() {
+        const userAnswer = document.getElementById('answer').value.trim();
+        const correctAnswer = document.getElementById('correct_answer').value.trim();
+
+        if (userAnswer === correctAnswer) {
+            attempts++;
+            document.getElementById('result').innerText = 'Correct!';
+            showPopupBtn.click(); // Show popup automatically after correct answer
+        } else {
+            document.getElementById('result').innerText = 'Incorrect. Try again.';
+        }
+    };
+});
