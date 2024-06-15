@@ -101,3 +101,19 @@ const getUserCoordinates = () => {
 locationButton.addEventListener("click", getUserCoordinates);
 searchButton.addEventListener("click", getCityCoordinates);
 cityInput.addEventListener("keyup", e => e.key === "Enter" && getCityCoordinates());
+
+document.addEventListener("DOMContentLoaded", function() {
+    const messageForm = document.getElementById('answer-form');
+    const messageInput = document.getElementById('answer');
+    const resultContainer = document.getElementById('result');
+    const equationContainer = document.getElementById('equation');
+    const correctAnswerInput = document.getElementById('correct_answer');
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const messageForm = document.getElementById('answer-form');
+    const messageInput = document.getElementById('answer');
+    const resultContainer = document.getElementById('result');
+    const equationContainer = document.getElementById('equation');
+    const correctAnswerInput = document.getElementById('correct_answer');
+
+

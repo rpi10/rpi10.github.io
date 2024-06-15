@@ -71,7 +71,39 @@
     </head>
     <body2>
         <h1>Maths Question of the Day</h1>
-       
+    <script>
+    // Fetch questions from the JSON file
+    fetch("questions.json")
+        .then(response => response.json())
+        .then(questionsData => {
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+            const todaysQuestion = questionsData.find(question => question.date === today);
+
+            if (todaysQuestion) {
+                equationContainer.textContent = todaysQuestion.Equation;
+                correctAnswerInput.value = todaysQuestion.Answer;
+            } else {
+                equationContainer.textContent = "No question for today!";
+            }
+        })
+        .catch(error => {
+            console.error("Error loading questions:", error);
+        });
+
+    messageForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const userAnswer = messageInput.value.trim();
+        const correctAnswer = correctAnswerInput.value.trim();
+
+        if (userAnswer === correctAnswer) {
+            resultContainer.textContent = "Correct!";
+        } else {
+            resultContainer.textContent = "Incorrect. Try again!";
+        }
+    });
+});
+
+        </script>
         <h5><span id="equation"></span></p>
         <form id="answer-form">
             <label for="answer"></label>
@@ -80,38 +112,6 @@
             <button class="btn">Check Answer</button>
         </form>
         <p id="result" class="result"></p>
-        <script>
-            let correctAnswer;
-            let attempts = 0;
-    
-            // Load questions from the JSON file
-            fetch("questions.json")
-                .then(response => response.json())
-                .then(questions_data => {
-                    // Select a random question
-                    const random_question = questions_data[Math.floor(Math.random() * questions_data.length)];
-                    
-                    document.getElementById("equation").textContent = random_question.Equation;
-                    correctAnswer = random_question.Answer.toString();
-                    document.getElementById("correct_answer").value = correctAnswer;
-                })
-                .catch(error => {
-                    console.error("Error loading questions:", error);
-                });
-    
-            const form = document.getElementById('answer-form');
-    
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const userAnswer = document.getElementById('answer').value;
-                attempts++;
-    
-                if (userAnswer === correctAnswer) {
-                    document.getElementById('result').textContent = `Correct! You got it in ${attempts} attempts.`;
-                } else {
-                    document.getElementById('result').textContent = 'Incorrect. Try again!';
-                }
-            });
-        </script>
+       
     </body2>
 </html>
