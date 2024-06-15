@@ -1,117 +1,88 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Weather App Project JavaScript | CodingNepal</title>
-        <link rel="stylesheet" href="style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="script.js" defer></script>
-      </head>
-      <body>
-        <h1>A Smarter Weather Forecast</h1>
-        <div class="container">
-          <div class="weather-input">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App and Maths Question</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>A Smarter Weather Forecast</h1>
+    <div class="container">
+        <div class="weather-input">
             <h3>Enter a City Name</h3>
             <input class="city-input" type="text" placeholder="E.g., New York, London, Tokyo">
             <button class="search-btn">Search</button>
             <div class="separator"></div>
             <button class="location-btn">Use Current Location</button>
-          </div>
-          <div class="weather-data">
+        </div>
+        <div class="weather-data">
             <div class="current-weather">
-              <div class="details">
-                <h2>_______ ( ______ )</h2>
-                <h6>Temperature: __�C</h6>
-                <h6>Wind: __ M/S</h6>
-                <h6>Humidity: __%</h6>
-              </div>
+                <div class="details">
+                    <h2>_______ ( ______ )</h2>
+                    <h6>Temperature: __°C</h6>
+                    <h6>Wind: __ M/S</h6>
+                    <h6>Humidity: __%</h6>
+                </div>
             </div>
             <div class="days-forecast">
-              <h2>5-Day Forecast</h2>
-              <ul class="weather-cards">
-                <li class="card">
-                  <h3>( ______ )</h3>
-                  <h6>Temp: __C</h6>
-                  <h6>Wind: __ M/S</h6>
-                  <h6>Humidity: __%</h6>
-                </li>
-                <li class="card">
-                  <h3>( ______ )</h3>
-                  <h6>Temp: __C</h6>
-                  <h6>Wind: __ M/S</h6>
-                  <h6>Humidity: __%</h6>
-                </li>
-                <li class="card">
-                  <h3>( ______ )</h3>
-                  <h6>Temp: __C</h6>
-                  <h6>Wind: __ M/S</h6>
-                  <h6>Humidity: __%</h6>
-                </li>
-                <li class="card">
-                  <h3>( ______ )</h3>
-                  <h6>Temp: __C</h6>
-                  <h6>Wind: __ M/S</h6>
-                  <h6>Humidity: __%</h6>
-                </li>
-                <li class="card">
-                  <h3>( ______ )</h3>
-                  <h6>Temp: __C</h6>
-                  <h6>Wind: __ M/S</h6>
-                  <h6>Humidity: __%</h6>
-                </li>
-              </ul>
+                <h2>5-Day Forecast</h2>
+                <ul class="weather-cards">
+                    <li class="card">
+                        <h3>( ______ )</h3>
+                        <h6>Temp: __C</h6>
+                        <h6>Wind: __ M/S</h6>
+                        <h6>Humidity: __%</h6>
+                    </li>
+                    <li class="card">
+                        <h3>( ______ )</h3>
+                        <h6>Temp: __C</h6>
+                        <h6>Wind: __ M/S</h6>
+                        <h6>Humidity: __%</h6>
+                    </li>
+                    <li class="card">
+                        <h3>( ______ )</h3>
+                        <h6>Temp: __C</h6>
+                        <h6>Wind: __ M/S</h6>
+                        <h6>Humidity: __%</h6>
+                    </li>
+                    <li class="card">
+                        <h3>( ______ )</h3>
+                        <h6>Temp: __C</h6>
+                        <h6>Wind: __ M/S</h6>
+                        <h6>Humidity: __%</h6>
+                    </li>
+                    <li class="card">
+                        <h3>( ______ )</h3>
+                        <h6>Temp: __C</h6>
+                        <h6>Wind: __ M/S</h6>
+                        <h6>Humidity: __%</h6>
+                    </li>
+                </ul>
             </div>
-          </div>
         </div>
-     
-      </body>
-      <head>
-        <meta charset="utf-8">
-        <title>Maths Question of the Day</title>
-    </head>
-    <body2>
-        <h1>Maths Question of the Day</h1>
-    <script>
-    // Fetch questions from the JSON file
-    fetch("questions.json")
-        .then(response => response.json())
-        .then(questionsData => {
-            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-            const todaysQuestion = questionsData.find(question => question.date === today);
+    </div>
 
-            if (todaysQuestion) {
-                equationContainer.textContent = todaysQuestion.Equation;
-                correctAnswerInput.value = todaysQuestion.Answer;
-            } else {
-                equationContainer.textContent = "No question for today!";
-            }
-        })
-        .catch(error => {
-            console.error("Error loading questions:", error);
-        });
+    <h1>Maths Question of the Day</h1>
+    <h5><span id="equation"></span></h5>
+    <form id="answer-form">
+        <label for="answer"></label>
+        <input type="text" id="answer" name="answer" value="x = " class="answer">
+        <input type="hidden" id="correct_answer">
+        <button type="button" class="btn" onclick="checkAnswer()">Check Answer</button>
+    </form>
+    <p id="result" class="result"></p>
 
-    messageForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const userAnswer = messageInput.value.trim();
-        const correctAnswer = correctAnswerInput.value.trim();
+    <!-- Popup for Attempts and WhatsApp Share -->
+    <button id="showPopupBtn">Show Attempts</button>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopup">&times;</span>
+            <p id="attemptsText">Attempts: 0</p>
+            <button id="shareBtn">Share on WhatsApp</button>
+        </div>
+    </div>
 
-        if (userAnswer === correctAnswer) {
-            resultContainer.textContent = "Correct!";
-        } else {
-            resultContainer.textContent = "Incorrect. Try again!";
-        }
-    });
-});
-
-        </script>
-        <h5><span id="equation"></span></p>
-        <form id="answer-form">
-            <label for="answer"></label>
-            <input type="text" id="answer" name="answer" value="x = " class="answer">
-            <input type="hidden" id="correct_answer">
-            <button class="btn">Check Answer</button>
-        </form>
-        <p id="result" class="result"></p>
-       
-    </body2>
+    <script src="script.js" defer></script>
+</body>
 </html>
