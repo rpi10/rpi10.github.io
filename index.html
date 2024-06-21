@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>A Smarter Weather</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RJX85HJXC4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RJX85HJXC4');
+</script>
+    <meta charset="utf-8">
     <script>
         async function fetchQuestion() {
             const response = await fetch('questions.json');
             const questions = await response.json();
+           
             const today = new Date().toISOString().split('T')[0];
             const question = questions.find(q => q.date === today);
 
@@ -20,39 +29,47 @@
             }
         }
 
+    
+
+        
         function showPopup(attempts) {
-            const popup = document.getElementById('popup');
-            popup.style.display = 'block';
-            popup.innerHTML = `
-                <p>Correct! You got it in ${attempts} attempts.</p>
-                <button onclick="share(attempts)">Share</button>
-                <div id="fallback" style="display:none;">
-                    <p>Share this:</p>
-                    <a href="#" id="facebookShare">Facebook</a>
-                    <a href="#" id="twitterShare">Twitter</a>
-                </div>
-            `;
+    const popup = document.getElementById('popup');
+    popup.style.display = 'block';
+    popup.innerHTML = `
+        <p>Correct! You got it in ${attempts} attempts.</p>
+        <button onclick="shareOnWhatsApp(${attempts})">Share on WhatsApp</button>
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button onclick="shareViaSMS()">Share via SMS</button>
+    `;
+}
+
+
+    function copyToClipboard(attempts) {
+    const shareText = `A Smarter Weather\nI solved today's math problem in ${attempts} attempts! Check it out: https://asmarterweather.github.io`;
+    navigator.clipboard.writeText(shareText)
+        .then(() => {
+            alert('Copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+}
+
+
+function shareViaSMS(attempts) {
+    const shareText = `I solved today's math problem in ${attempts} attempts! Check it out: https://asmarterweather.github.io`;
+    const smsBody = encodeURIComponent(shareText);
+    const smsUrl = `sms:?body=${smsBody}`;
+    
+    window.open(smsUrl, '_blank');
+}
+
+function shareOnWhatsApp(attempts) {
+            const shareText = `A Smarter Weather\nI solved today's math problem in ${attempts} attempts! Check it out: https://asmarterweather.github.io`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
-        function share(attempts) {
-            const shareData = {
-                title: 'A Smarter Weather',
-                text: `I solved today's math problem in ${attempts} attempts! Check it out:`,
-                url: 'https://asmarterweather.github.io'
-            };
-
-            if (navigator.share) {
-                navigator.share(shareData)
-                    .then(() => console.log('Successful share'))
-                    .catch((error) => console.log('Error sharing', error));
-            } else {
-                alert('Web Share API not supported in this browser. Use the links below to share.');
-                document.getElementById('fallback').style.display = 'block';
-
-                document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${shareData.url}`;
-                document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareData.text)}%20${encodeURIComponent(shareData.url)}`;
-            }
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchQuestion();
@@ -75,9 +92,10 @@
                 }
             });
         });
-    </script>
+</script>
 </head>
 <body>
+    
     <h1>A Smarter Weather Forecast</h1>
     <div class="container">
         <div class="weather-input">
